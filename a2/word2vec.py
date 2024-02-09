@@ -120,6 +120,17 @@ def negSamplingLossAndGradient(
     ### YOUR CODE HERE (~10 Lines)
 
     ### Please use your implementation of sigmoid in here.
+    dotProductMatrix : np.ndarray = outsideVectors.dot(centerWordVec)
+    softMaxOfDotProductMatrix = softmax(dotProductMatrix)
+    print(indices)
+    loss = -1 * np.log(sigmoid(dotProductMatrix[outsideWordIdx])) - sum( [ np.log(sigmoid(dotProductMatrix[index])) for index in indices ])
+    # my derivative
+    gradCenterVec = sum( [ outsideVectors[index] / (np.exp(-1 * dotProductMatrix[index]) + 1 ) for index in indices ])
+    - (outsideVectors[outsideWordIdx]) / (np.exp(dotProductMatrix[outsideWordIdx]) + 1) 
+    # gradCenterVec = sum( [ outsideVectors[index] * (1 - sigmoid(-1 * dotProductMatrix[index])) for index in indices ])
+    # + (outsideVectors[outsideWordIdx])* (1 - sigmoid(-1 * dotProductMatrix[outsideWordIdx]))
+    #### tried both implementation, problem with the loss?
+    gradOutsideVecs =  outsideVectors
 
     ### END YOUR CODE
 
