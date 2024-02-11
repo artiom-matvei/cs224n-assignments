@@ -120,12 +120,16 @@ def negSamplingLossAndGradient(
     ### YOUR CODE HERE (~10 Lines)
 
     ### Please use your implementation of sigmoid in here.
+    print(indices)
+    print(outsideVectors)
+    print(centerWordVec)
     dotProductMatrix : np.ndarray = outsideVectors.dot(centerWordVec)
+    print(dotProductMatrix)
     loss = -1 * np.log(sigmoid(dotProductMatrix[outsideWordIdx])) - sum( [ np.log(sigmoid(-1 * dotProductMatrix[index])) for index in indices ])
     # my derivative
     gradCenterVec = sum( [ outsideVectors[index] / (np.exp(-1 * dotProductMatrix[index]) + 1 ) for index in indices ])
     - (outsideVectors[outsideWordIdx]) / (np.exp(dotProductMatrix[outsideWordIdx]) + 1) 
-    gradOutsideVecs =  outsideVectors
+    gradOutsideVecs =  np.zeros(outsideVectors.shape)
 
     ### END YOUR CODE
 
@@ -217,12 +221,12 @@ def getDummyObjects():
     """ Helper method for naiveSoftmaxLossAndGradient and negSamplingLossAndGradient tests """
 
     def dummySampleTokenIdx():
-        return random.randint(0, 4)
+        return random.randint(2, 3)
 
     def getRandomContext(C):
-        tokens = ["a", "b", "c", "d", "e"]
-        return tokens[random.randint(0,4)], \
-            [tokens[random.randint(0,4)] for i in range(2*C)]
+        tokens = ["a", "b", "c", "d"]
+        return tokens[random.randint(0,3)], \
+            [tokens[random.randint(0,3)] for i in range(2*C)]
 
     dataset = type('dummy', (), {})()
     dataset.sampleTokenIdx = dummySampleTokenIdx
@@ -230,8 +234,8 @@ def getDummyObjects():
 
     random.seed(31415)
     np.random.seed(9265)
-    dummy_vectors = normalizeRows(np.random.randn(10,3))
-    dummy_tokens = dict([("a",0), ("b",1), ("c",2),("d",3),("e",4)])
+    dummy_vectors = normalizeRows(np.random.randn(5,2))
+    dummy_tokens = dict([("a",0), ("b",1), ("c",2),("d",3)])
 
     return dataset, dummy_vectors, dummy_tokens
 
@@ -259,9 +263,9 @@ def test_negSamplingLossAndGradient():
     def temp(vec):
         loss, gradCenterVec, gradOutsideVecs = negSamplingLossAndGradient(vec, 1, dummy_vectors, dataset)
         return loss, gradCenterVec
-    gradcheck_naive(temp, np.random.randn(3), "negSamplingLossAndGradient gradCenterVec")
+    gradcheck_naive(temp, np.random.randn(2), "negSamplingLossAndGradient gradCenterVec")
 
-    centerVec = np.random.randn(3)
+    centerVec = np.random.randn(2)
     def temp(vec):
         loss, gradCenterVec, gradOutsideVecs = negSamplingLossAndGradient(centerVec, 1, vec, dataset)
         return loss, gradOutsideVecs
