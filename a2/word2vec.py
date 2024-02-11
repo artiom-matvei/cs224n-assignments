@@ -120,15 +120,17 @@ def negSamplingLossAndGradient(
     ### YOUR CODE HERE (~10 Lines)
 
     ### Please use your implementation of sigmoid in here.
-    dotProductMatrix : np.ndarray = outsideVectors.dot(centerWordVec)
-    loss = -1 * np.log(sigmoid(dotProductMatrix[outsideWordIdx])) - sum( [ np.log(sigmoid(-1 * dotProductMatrix[index])) for index in indices ])
-    # my derivative
-    gradCenterVec = sum( [ outsideVectors[index] / (np.exp(-1 * dotProductMatrix[index]) + 1 ) for index in indices ])
-    - (outsideVectors[outsideWordIdx]) / (np.exp(dotProductMatrix[outsideWordIdx]) + 1) 
-    gradOutsideVecs =  outsideVectors
-
+    dotProductMatrix : np.ndarray = np.dot(outsideVectors, centerWordVec)
+    loss = (-1 * np.log(sigmoid(dotProductMatrix[outsideWordIdx])) 
+            - sum([ np.log(sigmoid(-1 * dotProductMatrix[index])) for index in indices[1:]]))
+    gradCenterVec = ( (outsideVectors[outsideWordIdx])* (sigmoid(dotProductMatrix[outsideWordIdx]) - 1 ) 
+                     + sum( [ outsideVectors[index] * (1 - sigmoid(-1 * dotProductMatrix[index])) for index in indices[1:] ]))
+    
+    gradOutsideVecs =  np.zeros(outsideVectors.shape)
+    gradOutsideVecs[outsideWordIdx] += -1 * centerWordVec / (np.exp(dotProductMatrix[outsideWordIdx]) + 1)
+    for index in indices[1:]:
+        gradOutsideVecs[index] += centerWordVec / (np.exp(-1 * dotProductMatrix[index]) + 1 )
     ### END YOUR CODE
-
     return loss, gradCenterVec, gradOutsideVecs
 
 
