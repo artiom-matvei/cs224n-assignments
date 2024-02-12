@@ -40,6 +40,7 @@ def save_params(iter, params):
 
 def sgd(f, x0, step, iterations, postprocessing=None, useSaved=False,
         PRINT_EVERY=10):
+    # what is the argument passed to f? it is vec in run.py:41
     """ Stochastic Gradient Descent
 
     Implement the stochastic gradient descent method in this function.
@@ -86,7 +87,8 @@ def sgd(f, x0, step, iterations, postprocessing=None, useSaved=False,
 
         loss = None
         ### YOUR CODE HERE (~2 lines)
-
+        loss, grad = f(x)
+        x = x - step * grad
         ### END YOUR CODE
 
         x = postprocessing(x)
