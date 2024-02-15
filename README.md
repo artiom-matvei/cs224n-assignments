@@ -9,6 +9,8 @@ The 2021 version of the course was followed as it had all the material available
 ## Assignment 2
 [Problem statement](a2/a2.pdf)
 
+### My work
+
 [Latex type-set pdf answering the written portion of the assignment](a2/a2_solution.pdf)
 
 [Implementation of word2vec](a2/word2vec.py)
