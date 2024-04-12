@@ -250,7 +250,7 @@ class Parser(object):
 
         UAS = all_tokens = 0.0
         with tqdm(total=len(dataset)) as prog:
-            for i, ex in enumerate(dataset):
+            for i, ex in enumerate(dataset): # problem with i=31 {'word': [5156, 123, 175, 86, 85, 2789, 136, 3179, 87], 'pos': [84, 41, 39, 45, 41, 44, 48, 43, 46], 'head': [-1, 2, 7, 7, 5, 7, 7, 0, 7], 'label': [-1, 8, 16, 14, 8, 26, 29, 0, 14]}
                 head = [-1] * len(ex['word'])
                 for h, t, in dependencies[i]:
                     head[t] = h
@@ -360,8 +360,8 @@ def load_and_preprocess_data(reduced=True):
                           lowercase=config.lowercase)
     if reduced:
         train_set = train_set[:1000]
-        dev_set = dev_set[:500]
-        test_set = test_set[:500]
+        dev_set = dev_set[:10]
+        test_set = test_set[:10]
     print("took {:.2f} seconds".format(time.time() - start))
 
     print("Building parser...",)

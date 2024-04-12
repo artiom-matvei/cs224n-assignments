@@ -126,13 +126,15 @@ def minibatch_parse(sentences, model: ParserModel, batch_size):
         # 5. Use the model to predict the next transition for each partial parse in the minibatch
         transitions = model.predict(minibatch)
         # 6. Perform a parse step on each partial parse in the minibatch with its predicted transition
-        for index, parse in enumerate(minibatch):
-            parse.parse_step(transition=transitions[index])
+        for i, transition in enumerate(transitions):
+            minibatch[i].parse_step(transition=transition)
+        # for index, parse in enumerate(minibatch):
+        #     parse.parse_step(transition=transitions[index])
             # 7. Remove the completed (empty buffer and stack of size 1) parses from unfinished parses
-            if len(parse.buffer) == 0 and len(parse.stack) == 1:
-                dependencies.append(parse.dependencies)
-                unfinished_parses.remove(parse)
+            if len(minibatch[i].buffer) == 0 and len(minibatch[i].stack) == 1:
+                unfinished_parses.remove(minibatch[i])
 
+    dependencies = [partial_parse.dependencies for partial_parse in partial_parses]
     ### QSTS: should I put the just parsed sentences at the back of the list to prevent working on the same sentences?
     ### END YOUR CODE
 
