@@ -1,0 +1,2 @@
+A4 refers to A3 from the Spring 2024 version of the course. I chose to do the most recent version A3-S2024 because it is the most recent and most up to date with the current GCP environment.
+However, A3-s2024 questions are the same as the old A4 questions.
