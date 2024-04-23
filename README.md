@@ -1,5 +1,5 @@
 # Introduction
-This repository represents my work done in order to follow the course Natural Language Processing with Deep Learning.
+This repository represents my work done while completing the Natural Language Processing with Deep Learning course.
 I follow the 2021 versions for Assignment 1 and 2, the Winter 2024 version for assignment 3, and Spring 2024 version for Assignment 4. All the material is available here https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1214/
 
 Enjoy the code and the math :wink:
