@@ -41,3 +41,10 @@ This assignment contains a theoretical and practical part.
 [Neural network predicting which transition to apply](a3/a3_student_code/parser_model.py) :brain:
 
 [Model training code using Adam optimizer](a3/a3_student_code/run.py) :weight_lifting:
+
+### Results
+Below is a table summarizing the performance of the model on the Unlabeled Attachment Score metric. We can see that the model outperforms the target performance objective by 1.8%.
+|         |UAS|Target UAS|
+|---------|--------------------------------|------------|
+|Validation set  |88.80                           | 87         |
+|Test set |89.06                           | N/A        |
