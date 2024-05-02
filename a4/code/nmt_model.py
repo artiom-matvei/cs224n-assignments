@@ -85,9 +85,15 @@ class NMT(nn.Module):
         ###         https://pytorch.org/docs/stable/generated/torch.nn.Linear.html
         ###     Dropout Layer:
         ###         https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html
-
-
-
+        self.post_embed_cnn = nn.Conv1d(in_channels=embed_size, out_channels=embed_size, kernel_size=2, padding='same')
+        self.encoder = nn.LSTM(input_size=embed_size, hidden_size=self.hidden_size, bidirectional=True, bias=True)
+        self.decoder = nn.LSTMCell(input_size=embed_size+self.hidden_size, hidden_size=self.hidden_size, bias=True)
+        self.h_projection = nn.Linear(in_features=2*self.hidden_size, out_features=self.hidden_size, bias=False)
+        self.c_projection = nn.Linear(in_features=2*self.hidden_size, out_features=self.hidden_size, bias=False)
+        self.att_projection = nn.Linear(in_features=2*self.hidden_size, out_features=self.hidden_size, bias=False)
+        self.combined_output_projection = nn.Linear(in_features=3*self.hidden_size, out_features=self.hidden_size, bias=False)
+        self.target_vocab_projection = nn.Linear(in_features=self.hidden_size, out_features=len(self.vocab.tgt), bias=False)
+        self.dropout = nn.Dropout(p=self.dropout_rate)
         ### END YOUR CODE
 
     def forward(self, source: List[List[str]], target: List[List[str]]) -> torch.Tensor:
@@ -179,11 +185,17 @@ class NMT(nn.Module):
         ###         https://pytorch.org/docs/stable/generated/torch.cat.html
         ###     Tensor Permute:
         ###         https://pytorch.org/docs/stable/generated/torch.permute.html
-
-
-
-
-
+        X = self.model_embeddings.source(source_padded)
+        X = self.post_embed_cnn(X.permute(1, 2, 0)).permute(2, 0, 1)
+        X = pack_padded_sequence(X, lengths=source_lengths)
+        enc_hiddens, (last_hidden, last_cell) = self.encoder(X)
+        enc_hiddens, _ = pad_packed_sequence(enc_hiddens)  # (sec_len, b, h*2)
+        enc_hiddens = enc_hiddens.permute(1, 0, 2)  # (b, src_len, h*2)
+        init_decoder_hidden = self.h_projection(torch.cat((last_hidden[0], last_hidden[1]), 1))
+        # assert init_decoder_hidden.shape == torch.tensor([batch_size, 2*self.hidden])
+        init_decoder_cell = self.c_projection(torch.cat((last_cell[0], last_cell[1]), 1))
+        # assert init_decoder_cell.shape == torch.tensor([batch_size, 2*self.hidden])
+        dec_init_state = (init_decoder_hidden, init_decoder_cell)
         ### END YOUR CODE
 
         return enc_hiddens, dec_init_state

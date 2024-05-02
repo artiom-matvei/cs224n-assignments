@@ -166,8 +166,8 @@ class Vocab(object):
         @param src_vocab (VocabEntry): VocabEntry for source language
         @param tgt_vocab (VocabEntry): VocabEntry for target language
         """
-        self.src = src_vocab
-        self.tgt = tgt_vocab
+        self.src: VocabEntry = src_vocab
+        self.tgt: VocabEntry = tgt_vocab
 
     @staticmethod
     def build(src_sents, tgt_sents) -> 'Vocab':
